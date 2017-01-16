@@ -53,6 +53,7 @@ namespace Karta_Biblioteka
             }
             catch (Exception e)
             {
+                conn.Close();
                 Console.WriteLine(e.Message);
             }
 
@@ -92,6 +93,28 @@ namespace Karta_Biblioteka
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            DBHelper.DeleteTable("Karta",conn);
+            conn.Close();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            DBHelper.DeleteTable("Oddanie", conn);
+            DBHelper.DeleteTable("Wypożyczenie", conn);
+            conn.Close();
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            new BorowAndReturnFiller(conn).fillBorwosAndReturns(int.Parse(numberOfBorows.Text));
+            conn.Close();
         }
     }
 }
