@@ -26,7 +26,6 @@ namespace Karta_Biblioteka
             sb.Append(rnd.Next(10, 99));
             sb.Append('-');
             sb.Append(rnd.Next(100, 999));
-
             return sb.ToString();
         }
 
