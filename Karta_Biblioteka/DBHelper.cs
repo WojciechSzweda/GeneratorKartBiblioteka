@@ -13,7 +13,20 @@ namespace Karta_Biblioteka
             new SqlCommand(sql, con).ExecuteNonQuery();
         }
 
+        public static int[] getIdList(string tableName, SqlConnection conn)
+        {
+            string sql = String.Format("SELECT ID FROM {0}", tableName);
+            var command = new SqlCommand(sql, conn);
+            List<int> ids = new List<int>();
 
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+
+                    ids.Add(reader.GetInt32(0));
+            }
+            return ids.ToArray();
+        }
 
     }
 }

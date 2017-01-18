@@ -37,6 +37,7 @@ namespace Karta_Biblioteka
             btnAdd.IsEnabled = true;
             btnAddBook.IsEnabled = true;
             btnAddPub.IsEnabled = true;
+            btnAddCopies.IsEnabled = true;
             try
             {
                 conn.Open();
@@ -97,7 +98,14 @@ namespace Karta_Biblioteka
         private void btnAddBook_Click(object sender, RoutedEventArgs e)
         {
             conn.Open();
-            BookGenerator.FillTable(conn, int.Parse(tbQuantityBook.Text));
+            BookGenerator.FillTableBooks(conn, int.Parse(tbQuantityBook.Text));
+            conn.Close();
+        }
+
+        private void btnAddCopies_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            BookGenerator.FillTableCopies(conn, int.Parse(tbQuantityCopies.Text));
             conn.Close();
         }
     }

@@ -11,14 +11,16 @@ namespace Karta_Biblioteka
     {
         public static void FillTable(SqlConnection conn, int maxInserts)
         {
-            StreamReader reader = new StreamReader("Publisher.txt");
-            for (int i = 0; i < maxInserts; i++)
+            using (StreamReader reader = new StreamReader("Publisher.txt"))
             {
-                using (SqlCommand command = new SqlCommand(@"INSERT INTO Wydawca (Nazwa) 
-                                                         OUTPUT INSERTED.ID VALUES (@name)", conn))
+                for (int i = 0; i < maxInserts; i++)
                 {
-                    command.Parameters.AddWithValue("@name", reader.ReadLine());
-                    command.ExecuteScalar();
+                    using (SqlCommand command = new SqlCommand(@"INSERT INTO Wydawca (Nazwa) 
+                                                            VALUES (@name)", conn))
+                    {
+                        command.Parameters.AddWithValue("@name", reader.ReadLine());
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }

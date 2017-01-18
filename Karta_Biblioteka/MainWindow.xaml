@@ -20,6 +20,8 @@
         <Button x:Name="btnAddPub" Content="Add [Wydawca]" HorizontalAlignment="Left" Margin="85,302,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="btnAddPub_Click"/>
         <Button x:Name="btnAddBook" Content="Add [Książka]" HorizontalAlignment="Left" Margin="85,342,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="btnAddBook_Click"/>
         <TextBox x:Name="tbQuantityBook" HorizontalAlignment="Left" Height="23" Margin="10,342,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="41" PreviewTextInput="tbQuantity_PreviewTextInput"/>
+        <TextBox x:Name="tbQuantityCopies" HorizontalAlignment="Left" Height="23" Margin="10,376,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="41" PreviewTextInput="tbQuantity_PreviewTextInput"/>
+        <Button x:Name="btnAddCopies" Content="Add [Kopia]" HorizontalAlignment="Left" Margin="85,375,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Click="btnAddCopies_Click"/>
 
     </Grid>
 </Window>

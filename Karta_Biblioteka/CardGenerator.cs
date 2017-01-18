@@ -35,7 +35,7 @@ namespace Karta_Biblioteka
         public static void FillTable(SqlConnection conn)
         {
             using (SqlCommand command = new SqlCommand(@"INSERT INTO Karta (Imię, Nazwisko, Miejscowość, [Kod pocztowy], Ulica, [Nr domu], [Nr mieszkania],[Nr kontaktowy], [Data wydania]) 
-                                                         OUTPUT INSERTED.ID VALUES (@imie, @nazwisko, @city, @kod, @ulica, @nrd, @nrm, @nrtel, @data)", conn))
+                                                         VALUES (@imie, @nazwisko, @city, @kod, @ulica, @nrd, @nrm, @nrtel, @data)", conn))
             {
                 command.Parameters.AddWithValue("@imie", GenerateName());
                 command.Parameters.AddWithValue("@nazwisko", GenerateName());
@@ -54,7 +54,8 @@ namespace Karta_Biblioteka
                 }
                 command.Parameters.AddWithValue("@nrtel", GeneratePhoneNumber());
                 command.Parameters.AddWithValue("@data", GenerateDate());
-                command.ExecuteScalar();
+                command.ExecuteNonQuery();
+
             }
 
         }
