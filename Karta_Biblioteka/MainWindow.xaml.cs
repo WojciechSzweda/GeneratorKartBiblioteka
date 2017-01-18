@@ -22,53 +22,21 @@ namespace Karta_Biblioteka
     {
         SqlConnection conn;
 
-        void FillTable(SqlConnection conn)
-        {
-            try
-            {
-                conn.Open();
-                using (SqlCommand command = new SqlCommand(@"INSERT INTO Karta (Imię, Nazwisko, Miejscowość, [Kod pocztowy], Ulica, [Nr domu], [Nr mieszkania],[Nr kontaktowy], [Data wydania]) 
-                                                         OUTPUT INSERTED.ID VALUES (@imie, @nazwisko, @city, @kod, @ulica, @nrd, @nrm, @nrtel, @data)", conn))
-                {
-                    command.Parameters.AddWithValue("@imie", Generator.GenerateName());
-                    command.Parameters.AddWithValue("@nazwisko", Generator.GenerateName());
-                    command.Parameters.AddWithValue("@city", Generator.GenerateCity());
-                    command.Parameters.AddWithValue("@kod", Generator.GeneratePostalCode());
-                    command.Parameters.AddWithValue("@ulica", Generator.GenerateStreet());
-                    command.Parameters.AddWithValue("@nrd", Generator.GenerateNrDomu());
-                    string nrM = Generator.GenerateNrM();
-                    if (nrM == null)
-                    {
-                        command.Parameters.AddWithValue("@nrm", DBNull.Value);
-                    }
-                    else
-                    {
-                        command.Parameters.AddWithValue("@nrm", nrM);
-                    }
-                    command.Parameters.AddWithValue("@nrtel", Generator.GeneratePhoneNumber());
-                    command.Parameters.AddWithValue("@data", Generator.GenerateDate());
-                    command.ExecuteScalar();
-                }
-                conn.Close();
-            }
-            catch (Exception e)
-            {
-                conn.Close();
-                Console.WriteLine(e.Message);
-            }
-
-        }
+        
 
 
         public MainWindow()
         {
             InitializeComponent();
+            CardGenerator.InitData();
         }
 
         private void btnConn_Click(object sender, RoutedEventArgs e)
         {
             conn = new SqlConnection(tbConnString.Text);
             btnAdd.IsEnabled = true;
+            btnAddBook.IsEnabled = true;
+            btnAddPub.IsEnabled = true;
             try
             {
                 conn.Open();
@@ -83,10 +51,12 @@ namespace Karta_Biblioteka
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            conn.Open();
             for (int i = 0; i < int.Parse(tbQuantity.Text); i++)
             {
-                FillTable(conn);
+                CardGenerator.FillTable(conn);
             }
+            conn.Close();
         }
 
         private void tbQuantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -114,6 +84,20 @@ namespace Karta_Biblioteka
         {
             conn.Open();
             new BorowAndReturnFiller(conn).fillBorwosAndReturns(int.Parse(numberOfBorows.Text));
+            conn.Close();
+        }
+
+        private void btnAddPub_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            Publishers.FillTable(conn, int.Parse(tbQuantityPub.Text));
+            conn.Close();
+        }
+
+        private void btnAddBook_Click(object sender, RoutedEventArgs e)
+        {
+            conn.Open();
+            BookGenerator.FillTable(conn, int.Parse(tbQuantityBook.Text));
             conn.Close();
         }
     }
