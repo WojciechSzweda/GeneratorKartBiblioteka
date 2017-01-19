@@ -22,7 +22,7 @@ namespace Karta_Biblioteka
     {
         SqlConnection conn;
 
-        
+        static Regex integerRegex = new Regex("[^0-9]+");
 
 
         public MainWindow()
@@ -60,53 +60,64 @@ namespace Karta_Biblioteka
             conn.Close();
         }
 
-        private void tbQuantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
+        private void integerOnlyPreview(object sender, TextCompositionEventArgs e) {
             Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            e.Handled = integerRegex.IsMatch(e.Text);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            DBHelper.DeleteTable("Karta",conn);
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => DBHelper.DeleteTable("Karta", conn));
+
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            DBHelper.DeleteTable("Oddanie", conn);
-            DBHelper.DeleteTable("Wypożyczenie", conn);
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => {
+                DBHelper.DeleteTable("Oddanie", conn);
+                DBHelper.DeleteTable("Wypożyczenie", conn);
+
+            });
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            new BorowAndReturnFiller(conn).fillBorwosAndReturns(int.Parse(numberOfBorows.Text));
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => new BorowAndReturnFiller(conn).fillBorwosAndReturns(int.Parse(numberOfBorows.Text)));
         }
 
         private void btnAddPub_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            Publishers.FillTable(conn, int.Parse(tbQuantityPub.Text));
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => Publishers.FillTable(conn, int.Parse(tbQuantityPub.Text)));
         }
 
         private void btnAddBook_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            BookGenerator.FillTableBooks(conn, int.Parse(tbQuantityBook.Text));
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.FillTableBooks(conn, int.Parse(tbQuantityBook.Text)));
         }
 
         private void btnAddCopies_Click(object sender, RoutedEventArgs e)
         {
-            conn.Open();
-            BookGenerator.FillTableCopies(conn, int.Parse(tbQuantityCopies.Text));
-            conn.Close();
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.FillTableCopies(conn, int.Parse(tbQuantityCopies.Text)));
+        }
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.FillTableAuthors(conn, int.Parse(tbQuantityAuthors.Text)));
+        }
+
+        private void button4_Click(object sender, RoutedEventArgs e)
+        {
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.ConnectBooksAndAuthors(conn));
+        }
+
+        private void button5_Click(object sender, RoutedEventArgs e)
+        {
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.FillCategories(conn));
+
+        }
+
+        private void button6_Click(object sender, RoutedEventArgs e)
+        {
+            DBHelper.ExecuteInConnectionContext(conn, () => BookGenerator.ConnectBooksAndCategories(conn));
         }
     }
 }
