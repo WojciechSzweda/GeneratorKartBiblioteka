@@ -9,7 +9,7 @@ namespace Karta_Biblioteka
     public static class DBHelper
     {
         public static void DeleteTable(string tableName,SqlConnection con) {
-            string sql = String.Format("DELETE {0}", tableName);
+            string sql = String.Format("DELETE [{0}]", tableName);
             new SqlCommand(sql, con).ExecuteNonQuery();
         }
 
@@ -26,6 +26,13 @@ namespace Karta_Biblioteka
                     ids.Add(reader.GetInt32(0));
             }
             return ids.ToArray();
+        }
+
+        public static void ExecuteInConnectionContext(SqlConnection conn, Action action) {
+            conn.Open();
+            action();
+            conn.Close();
+
         }
 
     }
